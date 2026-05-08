@@ -2,7 +2,7 @@ import cv2
 from typing import Generator
 
 class VideoProcessor:
-    def __int__(self, source):
+    def __init__(self, source):
         """source: video file path or RSTP stram URL"""
         self.cap = cv2.VideoCapture(source)
         self.fps = self.cap.get(cv2.CAP_PROP_FPS)
