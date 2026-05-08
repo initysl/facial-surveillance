@@ -1,47 +1,74 @@
-import torch
-from facenet_pytorch import MTCNN, InceptionResnetV1
+from insightface.app import FaceAnalysis
 import numpy as np
-from PIL import Image
+from typing import List, Dict, Optional
+
+import torch
 
 class FaceEncoder:
-    def __init__(self, device='cuda' if torch.cuda.is_available() else 'cpu'):
-        self.device = device
+    """
+    Unified face detection, alignment, and encoding using InsightFace
+    """
+    def __init__(self, det_size=(640, 640), det_thresh=0.5, device='cuda'):
+        """
+        Args:
+            det_size: Detection input size (width, height)
+            det_thresh: Detection confidence threshold
+            device: 'cuda' or 'cpu'
+        """
+        # Initialize InsightFace
+        providers = ['CUDAExecutionProvider', 'CPUExecutionProvider'] if device == 'cuda' else ['CPUExecutionProvider']
 
-        # Face detector
-        self.mtcnn = MTCNN(
-            image_size = 160,
-            margin=20,
-            keep_all=False, # Only return best face
-            device=device
+        self.app = FaceAnalysis(
+            name='buffalo_1',
+            providers=providers
         )
 
-        # Face recognition model (VGGFace2)
-        self.model = InceptionResnetV1(pretrained='vggface2').eval().to(device)
+        self.app.prepare(
+            ctx_id=0 if device == 'cuda' else -1,
+            det_size=det_size,
+            det_thresh=det_thresh
+        )
 
-    def detect_and_align(self, image):
-        """Detect face and return aligned crop"""
-        # image: PIL image or numpy array
-        if isinstance(image, np.ndarray):
-            image = Image.fromarray(image)
+        print(f" InsightFace initialized on {device}")
+        print(f"  Detection size: {det_size}")
+        print(f"  Detection threshold: {det_thresh}")
+
+    def process_image(self, image: np.ndarray) -> List[Dict]:
+        """
+        Detect all faces and extract embeddings.        
+        Args:
+            image: numpy array (BGR format from cv2)
+        """
+
+        faces = self.app.get(image)
+
+        results = []
+        for face in faces:
+            results.append({
+                'bbox': face.bbox.astype(int).tolist(),
+                'embedding': face.normed_embedding, 
+                'det_score': float(face.det_score),
+                'landmarks': face.kps.astype(int).tolist(),  # 5 points: eyes, nose, mouth corners
+                'age': getattr(face, 'age', None),
+                'gender': getattr(face, 'gender', None)
+            })
         
-        # Detect and align
-        face = self.mtcnn(image)
-        return face
+        return results
     
-    def encode(self, face_tensor):
-        """Generate embedding[512] from aligned face"""
-        if face_tensor is None:
+    def get_best_face(self, image: np.ndarray) -> Optional[Dict]:
+        """
+        Return face with highest detection score
+        For single person target images
+        """
+        faces = self.process_image(image)
+
+        if not faces:
             return None
         
-        with torch.no_grad():
-            face_tensor = face_tensor.unsqueeze(0).to(self.device)
-            embedding = self.model(face_tensor)
-
-        return embedding.cpu().numpy()[0]
+        best_face = max(faces, key=lambda x: x['det_score'])
+        return best_face
     
-    def process_image(self, image):
-        """Full pipeline: image -> embedding"""
-        face = self.detect_and_align(image)
-        if face is None:
-            return None
-        return self.encode(face)
+    def get_embedding(self, image: np.ndarray) -> Optional[np.ndarray]:
+        """Extract embedding from best face in image"""
+        face = self.get_best_face(image)
+        return face['embedding'] if face else None
