@@ -17,4 +17,4 @@ class FaceMatcher:
     def is_match(self, embedding1, embedding2):
         """Check if embeddings represent same person"""
         similarity = self.compare(embedding1, embedding2)
-        return similarity >= self.threshold,similarity
+        return similarity >= self.threshold, similarity
