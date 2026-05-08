@@ -19,7 +19,7 @@ class FaceEncoder:
         providers = ['CUDAExecutionProvider', 'CPUExecutionProvider'] if device == 'cuda' else ['CPUExecutionProvider']
 
         self.app = FaceAnalysis(
-            name='buffalo_1',
+            name='buffalo_l',
             providers=providers
         )
 
