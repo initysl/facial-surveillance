@@ -5,7 +5,7 @@ import cv2
 def main():
     encoder = FaceEncoder(device='cpu')
     
-    target_img = cv2.imread('data/target/person02.png')
+    target_img = cv2.imread('data/target/person03.png')
     if target_img is None:
         print("Error: Could not load target image")
         return
@@ -21,13 +21,13 @@ def main():
     engine = SurveillanceEngine(
         target_embedding=target_embedding,
         threshold=0.35,  # Slightly lower threshold
-        skip_frames=1,   # Process every other frame
+        skip_frames=0,   # Process every other frame
         min_consecutive=3,
         device='cpu'
     )
     
     results = engine.process_video(
-        video_source='data/videos/surveillance.mp4',
+        video_source='data/videos/sample.mp4',
         output_path='outputs/tracked_phase3.mp4',
         show_preview=False
     )
