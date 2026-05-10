@@ -1,8 +1,7 @@
 from insightface.app import FaceAnalysis
 import numpy as np
 from typing import List, Dict, Optional
-
-import torch
+from src.quality_filter import FaceQualityFilter
 
 class FaceEncoder:
     """
@@ -15,6 +14,7 @@ class FaceEncoder:
             det_thresh: Detection confidence threshold
             device: 'cuda' or 'cpu'
         """
+        self.quality_filter = FaceQualityFilter()
         # Initialize InsightFace
         providers = ['CUDAExecutionProvider', 'CPUExecutionProvider'] if device == 'cuda' else ['CPUExecutionProvider']
 
@@ -44,6 +44,13 @@ class FaceEncoder:
 
         results = []
         for face in faces:
+            # Quality check
+            is_ok, reason = self.quality_filter.is_acceptable(face, image)
+
+            if not is_ok:
+                print(f"Rejected face: {reason}")
+                continue
+            
             results.append({
                 'bbox': face.bbox.astype(int).tolist(),
                 'embedding': face.normed_embedding, 
