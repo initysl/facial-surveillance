@@ -13,7 +13,7 @@ def main():
     target_embedding = encoder.get_embedding(target_img)
     
     if target_embedding is None:
-        print("No face in target")
+        print("No face detected in target")
         return
     
     print("Target loaded\n")
@@ -21,13 +21,13 @@ def main():
     engine = SurveillanceEngine(
         target_embedding=target_embedding,
         threshold=0.35,  # Slightly lower threshold
-        skip_frames=0,   # Process every other frame
+        skip_frames=3,   # Process every other frame
         min_consecutive=3,
         device='cpu'
     )
     
     results = engine.process_video(
-        video_source='data/videos/sample.mp4',
+        video_source='data/videos/walk.mp4',
         output_path='outputs/tracked_phase3.mp4',
         show_preview=False
     )

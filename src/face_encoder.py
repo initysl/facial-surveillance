@@ -1,3 +1,4 @@
+import cv2
 from insightface.app import FaceAnalysis
 import numpy as np
 from typing import List, Dict, Optional
@@ -39,18 +40,30 @@ class FaceEncoder:
         Args:
             image: numpy array (BGR format from cv2)
         """
+        # Upscale small images
+        h, w = image.shape[:2]
+
+        if w < 300 or h < 300:
+            # Scale up to minimum 300px on shortest side
+            scale = 300 / min(w, h)
+            new_w = int(w * scale)
+            new_h = int(h * scale)
+
+            image = cv2.resize(image, (new_w, new_h), interpolation=cv2.INTER_CUBIC)
+            print(f"Upscaled image from {w}x{h} to {new_w}x{new_h}")
+
 
         faces = self.app.get(image)
 
         results = []
         for face in faces:
             # Quality check
-            is_ok, reason = self.quality_filter.is_acceptable(face, image)
+            # is_ok, reason = self.quality_filter.is_acceptable(face, image)
 
-            if not is_ok:
-                print(f"Rejected face: {reason}")
-                continue
-            
+            # if not is_ok:
+            #     print(f"Rejected face: {reason}")
+            #     continue
+
             results.append({
                 'bbox': face.bbox.astype(int).tolist(),
                 'embedding': face.normed_embedding, 
@@ -75,7 +88,7 @@ class FaceEncoder:
         best_face = max(faces, key=lambda x: x['det_score'])
         return best_face
     
-    def get_embedding(self, image: np.ndarray) -> Optional[np.ndarray]:
+    def get_embedding(self, image: np.ndarray, skip_quality_check=False) -> Optional[np.ndarray]:
         """Extract embedding from best face in image"""
         face = self.get_best_face(image)
         return face['embedding'] if face else None
