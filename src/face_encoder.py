@@ -57,7 +57,7 @@ class FaceEncoder:
     
     def get_best_face(self, image: np.ndarray) -> Optional[Dict]:
         """
-        Return face with highest detection score
+        Return face with highest detection score. 
         For single person target images
         """
         faces = self.process_image(image)
