@@ -1,0 +1,14 @@
+insightface
+onnxruntime-gpu
+# OR onnxruntime==1.16.3        # CPU-only version
+deep-sort-realtime
+opencv-python
+pillow
+numpy
+scikit-learn
+tqdm
+sqlalchemy
+python-telegram-bot
+
+# Optional: Video acceleration
+# av==10.0.0                    # PyAV for faster video decoding
