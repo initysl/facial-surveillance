@@ -3,7 +3,7 @@ import numpy as np
 
 
 class FaceQualityFilter:
-    def __init__(self):
+    def __init__(self, min_size: int, min_blur_score: int):
         self.min_size = 80
         self.min_blur_score = 100
         self.max_pose_angle = 45

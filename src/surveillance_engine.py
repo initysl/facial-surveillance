@@ -239,7 +239,7 @@ class SurveillanceEngine:
                 clip_path = None
                 if is_newly_confirmed and self.clip_extractor:
                     clip_path = self.clip_extractor.start_clip(
-                        event_id=f"{self.session_id}_{track_id}"
+                        event_id=f"{self.session_id}_{track_id}" # type: ignore
                     )
                 
                 # Log to database
