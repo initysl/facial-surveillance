@@ -1,0 +1,28 @@
+# Production settings (stricter matching, all features enabled)
+
+model:
+  device: cuda # cuda(use cuda if gpu available) or cpu
+  det_size: [640, 640]
+  det_thresh: 0.6 # Stricter detection
+
+matching:
+  threshold: 0.45 # Higher confidence required
+  min_consecutive: 5 # More validation
+  window_size: 15
+
+alerts:
+  enabled: true
+  telegram_token: '${TELEGRAM_BOT_TOKEN}' # From environment variable
+  telegram_chat_id: '${TELEGRAM_CHAT_ID}'
+  on_confirmation_only: true
+
+clips:
+  enabled: true
+  buffer_seconds: 10 # Longer clips
+  fps: 30
+
+storage:
+  database_path: /var/surveillance/production.db
+  output_dir: /var/surveillance/outputs
+  save_face_crops: true
+  export_csv: true

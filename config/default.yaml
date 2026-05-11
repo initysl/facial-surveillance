@@ -1,0 +1,43 @@
+# Default configuration for surveillance system
+
+model:
+  device: cpu # cuda(use cuda if gpu available) or cpu
+  det_size: [640, 640] # Detection input size
+  det_thresh: 0.5 # Detection confidence threshold
+
+matching:
+  threshold: 0.4 # Similarity threshold for match
+  min_consecutive: 3 # Consecutive matches needed for confirmation
+  window_size: 10 # Frame window for validation
+  similarity_metric: cosine # cosine or euclidean
+
+tracking:
+  max_age: 30 # Frames to keep track alive
+  n_init: 3 # Frames to confirm track
+
+quality:
+  min_face_size: 50 # Minimum face size in pixels
+  min_blur_score: 80 # Minimum blur score (higher = sharper)
+  check_pose: true # Filter profile faces
+
+processing:
+  skip_frames: 2 # Process every Nth frame (0 = all frames)
+  batch_size: 4 # GPU batch size for encoding
+  num_workers: 2 # Thread pool size
+
+alerts:
+  enabled: false # Enable Telegram alerts
+  telegram_token: '' # Bot token from @BotFather
+  telegram_chat_id: '' # Target chat ID
+  on_confirmation_only: true # Only alert on confirmed matches
+
+clips:
+  enabled: false # Save video clips
+  buffer_seconds: 5 # Pre-match buffer duration
+  fps: 30 # Clip frame rate
+
+storage:
+  database_path: surveillance.db
+  output_dir: outputs
+  save_face_crops: true
+  export_csv: false
