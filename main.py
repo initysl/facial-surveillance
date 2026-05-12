@@ -12,16 +12,16 @@ def main():
         epilog="""
 Examples:
   # Basic usage
-  python main.py --target suspect.jpg --video footage.mp4
+  python3 main.py --target suspect.jpg --video footage.mp4
   
   # With configuration
-  python main.py --target suspect.jpg --video rtsp://camera1 --config production.yaml
+  python3 main.py --target suspect.jpg --video rtsp://camera1 --config production.yaml
   
   # Live preview
-  python main.py --target suspect.jpg --video footage.mp4 --preview
+  python3 main.py --target suspect.jpg --video footage.mp4 --preview
   
   # Save annotated output
-  python main.py --target suspect.jpg --video footage.mp4 --output result.mp4
+  python3 main.py --target suspect.jpg --video footage.mp4 --output result.mp4
         """
     )
     
