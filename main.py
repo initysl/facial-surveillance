@@ -1,8 +1,6 @@
 import argparse
 import cv2
 import sys
-from pathlib import Path
-
 from src.face_encoder import FaceEncoder
 from src.surveillance_engine import SurveillanceEngine
 from src.config import Config
@@ -140,7 +138,7 @@ Examples:
         # Export CSV if requested
         if args.export_csv:
             engine.database.export_to_csv(args.export_csv)
-            print(f"✓ Results exported to {args.export_csv}")
+            print(f"Results exported to {args.export_csv}")
         
         print("\nSurveillance completed successfully")
         print(f"Session ID: {results['session_id']}")
