@@ -2,3 +2,7 @@
 __pycache__/
 outputs/*.mp4
 data/videos/*.mp4
+test_phase_image.py
+test_phase_video.py
+test_phase3.py
+config.yaml
