@@ -1,0 +1,46 @@
+# docker-compose.yml
+version: "3.8"
+
+services:
+  surveillance:
+    build: .
+    image: facial-surveillance:latest
+    container_name: surveillance-system
+
+    runtime: nvidia # For GPU support
+
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
+
+    volumes:
+      # Mount data directories
+      - ./data:/app/data
+      - ./outputs:/app/outputs
+      - ./config:/app/config
+      - ./surveillance.db:/app/surveillance.db
+
+    # Override command for your use case
+    command: >
+      python3 main.py
+      --target /app/data/target/person02.png
+      --video /app/data/videos/surveillance.mp4
+      --config /app/config/production.yaml
+      --output /app/outputs/result.mp4
+
+    restart: unless-stopped
+
+  # Optional: Database viewer service
+  db-viewer:
+    build: .
+    image: facial-surveillance:latest
+    container_name: db-viewer
+
+    volumes:
+      - ./surveillance.db:/app/surveillance.db
+      - ./outputs:/app/outputs
+
+    command: python3 scripts/view_database.py --db /app/surveillance.db --recent 20
+
+    profiles: ["tools"] # Only run with: docker-compose --profile tools up
