@@ -21,9 +21,7 @@ class FaceTracker:
         # Store embeddings per track
         self.track_embeddings = {}  # {track_id: [embedding1, embedding2, ...]}
     
-    def update(self, 
-               faces: List[Dict],
-               frame: np.ndarray) -> List[Dict]:
+    def update(self, faces: List[Dict], frame: np.ndarray) -> List[Dict]:
         """
         Update tracker with new detections.
         

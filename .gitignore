@@ -2,6 +2,7 @@
 .env
 __pycache__/
 outputs/*.mp4
+outputs/matches/
 data/videos/*.mp4
 test_phase_image.py
 test_phase_video.py

@@ -1,7 +1,7 @@
 # Production settings (stricter matching, all features enabled)
 
 model:
-  device: cuda # cuda(use cuda if gpu available) or cpu
+  device: cpu # cuda(use cuda if gpu available) or cpu
   det_size: [640, 640]
   det_thresh: 0.6 # Stricter detection
 

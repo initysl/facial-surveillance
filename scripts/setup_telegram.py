@@ -6,13 +6,13 @@ async def get_chat_id(bot_token: str):
     """Get chat ID by sending test message."""
     bot = Bot(token=bot_token)
     
-    print("\n🤖 Bot Information:")
+    print("\nBot Information:")
     me = await bot.get_me()
     print(f"  Username: @{me.username}")
     print(f"  Name: {me.first_name}")
     print(f"  ID: {me.id}")
     
-    print("\n📱 To get your chat ID:")
+    print("\nTo get your chat ID:")
     print(f"  1. Open Telegram and search for @{me.username}")
     print("  2. Start a conversation with the bot")
     print("  3. Send any message to the bot")
@@ -22,7 +22,7 @@ async def get_chat_id(bot_token: str):
     updates = await bot.get_updates()
     
     if updates:
-        print("💬 Recent Messages:")
+        print("Recent Messages:")
         for update in updates[-5:]:  # Last 5 messages
             if update.message:
                 chat = update.message.chat
@@ -32,14 +32,14 @@ async def get_chat_id(bot_token: str):
                     print(f"  Username: @{chat.username}")
                 print(f"  Message: {update.message.text}")
     else:
-        print("⚠️  No messages found. Send a message to the bot first.")
+        print("No messages found. Send a message to the bot first.")
 
 def main():
-    print("="*60)
+    print("-"*60)
     print("TELEGRAM BOT SETUP")
-    print("="*60)
+    print("-"*60)
     
-    print("\n📋 Instructions:")
+    print("\nInstructions:")
     print("  1. Go to https://t.me/BotFather")
     print("  2. Send /newbot and follow instructions")
     print("  3. Copy the bot token\n")

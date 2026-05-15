@@ -1,3 +1,5 @@
+import os
+from dotenv import load_dotenv
 from src.face_encoder import FaceEncoder
 from src.matcher import FaceMatcher
 from src.tracker import FaceTracker
@@ -24,9 +26,20 @@ class SurveillanceEngine:
             target_embedding: Reference face embedding
             config: Configuration dictionary
         """
+
+        load_dotenv()
+
         self.target_embedding = target_embedding
         self.config = config
         
+        if 'alerts' in self.config:
+            # Use .env value as priority, fall back to what's in the config
+            self.config['alerts']['telegram_token'] = os.getenv(
+                "TELEGRAM_BOT_TOKEN", self.config['alerts'].get('telegram_token')
+            )
+            self.config['alerts']['telegram_chat_id'] = os.getenv(
+                "TELEGRAM_CHAT_ID", self.config['alerts'].get('telegram_chat_id')
+            )
         # Core components
         self.encoder = FaceEncoder(
             device=config['model']['device'],
@@ -47,15 +60,16 @@ class SurveillanceEngine:
             window_size=config['matching']['window_size']
         )
         
-        self.quality_filter = FaceQualityFilter(
-            min_size=config['quality']['min_face_size'],
-            min_blur_score=config['quality']['min_blur_score']
-        )
+        # Commented qualiy filter (needs improvement)
+        # self.quality_filter = FaceQualityFilter(
+        #     min_size=config['quality']['min_face_size'],
+        #     min_blur_score=config['quality']['min_blur_score']
+        # )
         
         # Storage components
         self.database = Database(config['storage']['database_path'])
         
-        # Alert system
+        # Alert system - NOW uses the patched config
         telegram_config = config.get('alerts', {})
         self.alerter = TelegramAlerter(
             bot_token=telegram_config.get('telegram_token', ''),
@@ -200,14 +214,14 @@ class SurveillanceEngine:
         self.stats['faces_detected'] += len(faces)
         
         # Quality filtering
-        quality_filtered_faces = []
-        for face in faces:
-            is_acceptable, reason = self.quality_filter.is_acceptable(face, frame)
-            if is_acceptable:
-                quality_filtered_faces.append(face)
+        # quality_filtered_faces = []
+        # for face in faces:
+        #     is_acceptable, reason = self.quality_filter.is_acceptable(face, frame)
+        #     if is_acceptable:
+        #         quality_filtered_faces.append(face)
         
         # Update tracker
-        tracked_faces = self.tracker.update(quality_filtered_faces, frame)
+        tracked_faces = self.tracker.update(faces, frame)
         
         # Match each tracked face
         for face in tracked_faces:

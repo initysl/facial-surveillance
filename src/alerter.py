@@ -1,11 +1,11 @@
 import asyncio
 from telegram import Bot
-from telegram.error import TelegramError
 import cv2
 import numpy as np
 from typing import Optional
 from datetime import datetime
 import io
+
 
 class TelegramAlerter:
     """Send real-time alerts via Telegram bot."""

@@ -26,7 +26,7 @@ processing:
   num_workers: 2 # Thread pool size
 
 alerts:
-  enabled: false # Enable Telegram alerts
+  enabled: true # Enable Telegram alerts
   telegram_token: '' # Bot token from @BotFather
   telegram_chat_id: '' # Target chat ID
   on_confirmation_only: true # Only alert on confirmed matches
@@ -40,4 +40,4 @@ storage:
   database_path: surveillance.db
   output_dir: outputs
   save_face_crops: true
-  export_csv: false
+  export_csv: true
