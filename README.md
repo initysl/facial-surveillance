@@ -301,8 +301,17 @@ facial-surveillance/
 ## Common Commands
 
 ```bash
+# Help
+python3 main.py --help
+
 # Basic scan
 python main.py --target person.jpg --video test.mp4
+
+# With output video
+python3 main.py --target TARGET.jpg --video VIDEO.mp4 --output outputs/result.mp4
+
+# With name tag
+python3 main.py --target TARGET.jpg --video VIDEO.mp4 --name "John Doe"
 
 # Live preview window
 python main.py --target person.jpg --video test.mp4 --preview
