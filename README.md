@@ -6,7 +6,8 @@ Real-time surveillance system that scans video/live RTSP footage to detect and t
 ![InsightFace](https://img.shields.io/badge/InsightFace-ArcFace-green)
 ![Docker](https://img.shields.io/badge/Docker-Ready-blue)
 
----
+https://github.com/user-attachments/assets/90a64486-8fee-4703-bd2d-ea54709adc3b
+
 
 ## What It Does
 
